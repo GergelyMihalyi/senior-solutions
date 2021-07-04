@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -13,9 +14,11 @@ public class EmployeesService {
 
     private ModelMapper modelMapper;
 
+    private AtomicLong idGenerator = new AtomicLong();
+
     private List<Employee> employees = Collections.synchronizedList(new ArrayList<>(List.of(
-            new Employee(1L, "John Doe"),
-            new Employee(2L, "Jack Doe")
+            new Employee(idGenerator.incrementAndGet(), "John Doe"),
+            new Employee(idGenerator.incrementAndGet(), "Jack Doe")
     )));
 
     public EmployeesService(ModelMapper modelMapper) {
@@ -31,5 +34,11 @@ public class EmployeesService {
 
     public EmployeeDto findEmployeeById(long id) {
         return modelMapper.map(employees.stream().filter(e -> e.getId() == id).findAny().orElseThrow(() -> new IllegalArgumentException("Employees not found: " + id)),EmployeeDto.class);
+    }
+
+    public EmployeeDto createEmployee(CreateEmployeeCommand command) {
+        Employee employee = new Employee(idGenerator.incrementAndGet(), command.getName());
+        employees.add(employee);
+        return modelMapper.map(employee, EmployeeDto.class);
     }
 }
