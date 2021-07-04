@@ -5,9 +5,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeesService {
@@ -23,8 +22,14 @@ public class EmployeesService {
         this.modelMapper = modelMapper;
     }
 
-    public List<EmployeeDto> listEmployees() {
-        Type targetListType = new TypeToken<List<EmployeeDto>>(){}.getType();
-        return modelMapper.map(employees,targetListType);
+    public List<EmployeeDto> listEmployees(Optional<String> prefix) {
+        Type targetListType = new TypeToken<List<EmployeeDto>>() {
+        }.getType();
+        List<Employee> filtered = employees.stream().filter(e -> prefix.isEmpty() || e.getName().toLowerCase().startsWith(prefix.get().toLowerCase())).collect(Collectors.toList());
+        return modelMapper.map(filtered, targetListType);
+    }
+
+    public EmployeeDto findEmployeeById(long id) {
+        return modelMapper.map(employees.stream().filter(e -> e.getId() == id).findAny().orElseThrow(() -> new IllegalArgumentException("Employees not found: " + id)),EmployeeDto.class);
     }
 }
