@@ -21,13 +21,22 @@ public class EmployeesController {
     }
 
     @GetMapping("/{id}")
-    public EmployeeDto findEmployeeById(@PathVariable("id") long id){
+    public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
         return employeesService.findEmployeeById(id);
     }
 
     @PostMapping
-    public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command){
+    public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command) {
         return employeesService.createEmployee(command);
+    }
 
+    @PutMapping("/{id}")
+    public EmployeeDto updateEmployee(@PathVariable("id") long id, @RequestBody UpdateEmployeeCommand command){
+        return employeesService.updateEmployee(id,command);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteEmployee(@PathVariable("id") long id){
+        employeesService.deleteEmployee(id);
     }
 }
