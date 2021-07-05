@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/instruments
+Content-Type: application/json
+
+{
+"brand": "Fender",
+  "type"
+}
+
+###
