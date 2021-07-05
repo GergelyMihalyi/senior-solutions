@@ -5,6 +5,14 @@ Accept: application/json
 {
 "name": "Jane Doe"}
 
+### Validaton
+POST http://localhost:8080/api/employees/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": ""}
+
 ###
 GET http://localhost:8080/api/employees/
 Accept: application/json
