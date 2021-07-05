@@ -11,7 +11,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": ""}
+  "name": "Afdsadsa"}
 
 ###
 GET http://localhost:8080/api/employees/
