@@ -10,8 +10,9 @@ public class Employee {
     public enum EmployeeType {FULL_TIME, HALF_TIME}
 
     @Id
-    @GeneratedValue(generator = "Emp_Gen")
-    @TableGenerator(name ="Emp_Gen", table = "emp_id_gen", pkColumnName = "gen_name",valueColumnName = "gen_val")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /*@GeneratedValue(generator = "Emp_Gen")
+    @TableGenerator(name ="Emp_Gen", table = "emp_id_gen", pkColumnName = "gen_name",valueColumnName = "gen_val")*/
     private Long id;
 
     @Column(name = "emp_name", length = 200, nullable = false)
@@ -21,6 +22,11 @@ public class Employee {
     private EmployeeType employeeType = EmployeeType.FULL_TIME;
 
     private LocalDate dateOfBirth;
+
+    @PostPersist
+    public void debugPersistá(){
+        System.out.println(name + " " + id);
+    }
 
     public Employee() {
     }
