@@ -5,12 +5,19 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "employees")
+@IdClass(EmployeeId.class)
 public class Employee {
 
     public enum EmployeeType {FULL_TIME, HALF_TIME}
 
+    @EmbeddedId
+    private EmployeeId employeeId;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   /* @GeneratedValue(generator = "Emp_Gen")
+    @TableGenerator(name ="Emp_Gen", table = "emp_id_gen", pkColumnName = "gen_name",valueColumnName = "gen_val")*/
+    /*@GeneratedValue(generator = "emp_seq_gen")
+    @SequenceGenerator(name = "emp_seq_gen",sequenceName = "emp_seq")*/
     private Long id;
 
     @Column(name = "emp_name", length = 200, nullable = false)
