@@ -10,7 +10,7 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "emp_name")
+    @Column(name = "emp_name", length=200, nullable=false)
     private String name;
 
     public Employee() {
