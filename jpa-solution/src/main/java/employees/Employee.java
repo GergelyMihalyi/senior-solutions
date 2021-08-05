@@ -2,6 +2,8 @@ package employees;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "employees")
@@ -23,8 +25,25 @@ public class Employee {
 
     private LocalDate dateOfBirth;
 
+    @ElementCollection
+    @CollectionTable(name = "nicknames", joinColumns = @JoinColumn(name = "emp_id"))
+    @Column(name = "nickname")
+    private Set<String> nicknames;
+
+    @ElementCollection
+    @CollectionTable(name = "bookings", joinColumns = @JoinColumn(name = "emp_id"))
+    @AttributeOverride(name = "startDate", column = @Column(name = "start_date"))
+    @AttributeOverride(name = "daysTaken", column = @Column(name = "days"))
+    private Set<VacationEntry> vacationBookings;
+
+    @ElementCollection
+    @CollectionTable(name = "phone_numbers", joinColumns = @JoinColumn(name = "emp_id"))
+    @MapKeyColumn(name = "phone_type")
+    @Column(name = "phone_number")
+    private Map<String, String> phoneNumbers;
+
     @PostPersist
-    public void debugPersistá(){
+    public void debugPersist() {
         System.out.println(name + " " + id);
     }
 
@@ -71,6 +90,30 @@ public class Employee {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Set<String> getNicknames() {
+        return nicknames;
+    }
+
+    public Set<VacationEntry> getVacationBookings() {
+        return vacationBookings;
+    }
+
+    public void setVacationBookings(Set<VacationEntry> vacationBookings) {
+        this.vacationBookings = vacationBookings;
+    }
+
+    public void setNicknames(Set<String> nicknames) {
+        this.nicknames = nicknames;
+    }
+
+    public Map<String, String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers(Map<String, String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
     }
 
     @Override

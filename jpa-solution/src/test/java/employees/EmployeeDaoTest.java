@@ -8,6 +8,8 @@ import javax.persistence.Persistence;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,10 +79,14 @@ class EmployeeDaoTest {
 
     @Test
     public void testEmployeeWithAttributes() {
-        employeeDao.save(new Employee("John Doe", Employee.EmployeeType.HALF_TIME, LocalDate.of(2000, 01, 01)));
+        Employee employee = new Employee("John Doe", Employee.EmployeeType.HALF_TIME, LocalDate.of(2000, 01, 01));
+        employeeDao.save(employee);
 
-        Employee employee = employeeDao.listAll().get(0);
-        assertEquals(LocalDate.of(2000, 1, 1),employee.getDateOfBirth());
+        System.out.println(employee.getDateOfBirth());
+
+        Employee employeeFirst = employeeDao.listAll().get(0);
+        System.out.println(employeeFirst.getDateOfBirth());
+        assertEquals(LocalDate.of(2000, 1, 1), employeeFirst.getDateOfBirth());
     }
 
     @Test
@@ -94,7 +100,7 @@ class EmployeeDaoTest {
     }
 
     @Test
-    public void testMerge(){
+    public void testMerge() {
         Employee employee = new Employee("John Doe");
         employeeDao.save(employee);
         employee.setName("Jack Doe");
@@ -102,9 +108,10 @@ class EmployeeDaoTest {
         Employee modifiedEmployee = employeeDao.findById(employee.getId());
         assertEquals("Jack Doe", modifiedEmployee.getName());
     }
+
     @Test
-    public void testFlush(){
-        for(int i=0;i<10;i++){
+    public void testFlush() {
+        for (int i = 0; i < 10; i++) {
             employeeDao.save(new Employee("John Doe" + i));
         }
         employeeDao.updateEmployeeNames();
@@ -114,6 +121,38 @@ class EmployeeDaoTest {
         employeeDao.updateEmployee(employee);
         Employee modifiedEmployee = employeeDao.findById(employee.getId());
         assertEquals("Jack Doe", modifiedEmployee.getName());
+    }
+
+    @Test
+    public void testNicknames() {
+        Employee employee = new Employee("John Doe");
+        employee.setNicknames(Set.of("Johny", "J"));
+        employeeDao.save(employee);
+        Employee anotherEmployee = employeeDao.findEmployeeByIdWithNicknames(employee.getId());
+        assertEquals(Set.of("J", "Johny"), anotherEmployee.getNicknames());
+    }
+
+    @Test
+    public void testVacations() {
+        Employee employee = new Employee("John Doe");
+        employee.setVacationBookings(Set.of(
+                new VacationEntry(LocalDate.of(2020,1,1),4)
+                ,new VacationEntry(LocalDate.of(2020,2,10),4)));
+        employeeDao.save(employee);
+        Employee anotherEmployee = employeeDao.findEmployeeByIdWithVacations(employee.getId());
+        System.out.println(anotherEmployee.getVacationBookings());
+        assertEquals(2,anotherEmployee.getVacationBookings().size());
+    }
+
+    @Test
+    public void testPhoneNumber() {
+        Employee employee = new Employee("John Doe");
+        employee.setPhoneNumbers(Map.of("home","1234","work","12345"));
+        employeeDao.save(employee);
+        Employee anotherEmployee = employeeDao.findEmployeeByIdWithPhoneNumbers(employee.getId());
+
+        assertEquals("1234", anotherEmployee.getPhoneNumbers().get("home"));
+        assertEquals("12345", anotherEmployee.getPhoneNumbers().get("work"));
     }
 
 }
