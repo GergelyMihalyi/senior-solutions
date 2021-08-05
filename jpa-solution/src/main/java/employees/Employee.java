@@ -6,6 +6,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "employees")
+@SecondaryTable(name = "emp_addresses", pkJoinColumns = @PrimaryKeyJoinColumn(name = "emp_id"))
 public class Employee {
 
     public enum EmployeeType {FULL_TIME, HALF_TIME}
@@ -54,6 +55,16 @@ public class Employee {
 
     @ManyToMany(mappedBy = "employees")
     private Set<Project> projects = new HashSet<>();
+/*
+    @Embedded
+    private Address address;
+*/
+    @Column(table = "emp_addresses")
+    private String zip;
+    @Column(table = "emp_addresses")
+    private String city;
+    @Column(table = "emp_addresses")
+    private String line1;
 
     @PostPersist
     public void debugPersist() {
@@ -156,6 +167,38 @@ public class Employee {
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+  /*  public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }*/
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getLine1() {
+        return line1;
+    }
+
+    public void setLine1(String line1) {
+        this.line1 = line1;
     }
 
     public void addPhoneNumber(PhoneNumber phoneNumber){

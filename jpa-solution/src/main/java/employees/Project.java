@@ -14,15 +14,15 @@ public class Project {
     private Long id;
     private String name;
 
-   /* @ManyToMany
-    private Set<Employee> employees = new HashSet<>();*/
+    @ManyToMany
+    private Set<Employee> employees = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    /*@ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "project_employee",
     joinColumns = @JoinColumn(name = "project_id"),
     inverseJoinColumns = @JoinColumn(name = "employee_id"))
     @MapKeyColumn(name = "employee_in_project")
-    private Map<String, Employee> employees = new HashMap<>();
+    private Map<String, Employee> employees = new HashMap<>();*/
 
     public Project() {
     }
@@ -30,12 +30,12 @@ public class Project {
     public Project(String name) {
         this.name = name;
     }
-/*
-    public void addEmployee(Employee employee){
+
+    public void addEmployee(Employee employee) {
         employees.add(employee);
         employee.getProjects().add(this);
     }
-*/
+
     public Long getId() {
         return id;
     }
@@ -52,19 +52,19 @@ public class Project {
         this.name = name;
     }
 
-    public Map<String, Employee> getEmployees() {
-        return employees;
-    }
+    /* public Map<String, Employee> getEmployees() {
+         return employees;
+     }
 
-    public void setEmployees(Map<String, Employee> employees) {
-        this.employees = employees;
+     public void setEmployees(Map<String, Employee> employees) {
+         this.employees = employees;
     }
-
-    /*  public Set<Employee> getEmployees() {
+ */
+    public Set<Employee> getEmployees() {
         return employees;
     }
 
     public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
-    }*/
+    }
 }
