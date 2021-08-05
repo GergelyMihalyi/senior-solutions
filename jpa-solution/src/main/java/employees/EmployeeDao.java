@@ -2,6 +2,7 @@ package employees;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Table;
 import java.util.List;
 
 public class EmployeeDao {
@@ -104,4 +105,16 @@ public class EmployeeDao {
         em.close();
         return employee;
     }
+
+    public void addPhoneNumber(long id,PhoneNumber phoneNumber) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        //Employee employee = em.find(Employee.class,id);
+        Employee employee = em.getReference(Employee.class,id);
+        phoneNumber.setEmployee(employee);
+        em.persist(phoneNumber);
+        em.getTransaction().commit();
+        em.close();
+    }
+
 }

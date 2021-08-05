@@ -144,7 +144,7 @@ class EmployeeDaoTest {
         assertEquals(2,anotherEmployee.getVacationBookings().size());
     }
 
-    @Test
+    /*@Test
     public void testPhoneNumber() {
         Employee employee = new Employee("John Doe");
         employee.setPhoneNumbers(Map.of("home","1234","work","12345"));
@@ -153,6 +153,36 @@ class EmployeeDaoTest {
 
         assertEquals("1234", anotherEmployee.getPhoneNumbers().get("home"));
         assertEquals("12345", anotherEmployee.getPhoneNumbers().get("work"));
+    }*/
+
+    @Test
+    public void testPhoneNumber(){
+        PhoneNumber phoneNumberHome = new PhoneNumber("home", "1234");
+        PhoneNumber phoneNumberWork = new PhoneNumber("work", "4324");
+        Employee employee = new Employee("John Doe");
+        employee.addPhoneNumber(phoneNumberHome);
+        employee.addPhoneNumber(phoneNumberWork);
+        employeeDao.save(employee);
+        Employee anotherEmployee = employeeDao.findEmployeeByIdWithPhoneNumbers(employee.getId());
+        assertEquals(2,anotherEmployee.getPhoneNumbers().size());
     }
 
+    @Test
+    public void testAddPhoneNumber(){
+        Employee employee = new Employee("John Doe");
+        employeeDao.save(employee);
+        employeeDao.addPhoneNumber(employee.getId(), new PhoneNumber("home", "1234"));
+        Employee anotherEmployee = employeeDao.findEmployeeByIdWithPhoneNumbers(employee.getId());
+        assertEquals(1,anotherEmployee.getPhoneNumbers().size());
+    }
+
+    @Test
+    public void testRemove(){
+        Employee employee = new Employee("John Doe");
+
+        employee.addPhoneNumber(new PhoneNumber("home", "1234"));
+        employee.addPhoneNumber(new PhoneNumber("work", "1234"));
+        employeeDao.save(employee);
+        employeeDao.delete(employee.getId());
+    }
 }
