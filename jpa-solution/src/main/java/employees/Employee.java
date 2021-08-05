@@ -49,6 +49,9 @@ public class Employee {
     @OneToOne
     private ParkingPlace parkingPlace;
 
+    @ManyToMany(mappedBy = "employees")
+    private Set<Project> projects = new HashSet<>();
+
     @PostPersist
     public void debugPersist() {
         System.out.println(name + " " + id);
@@ -129,6 +132,14 @@ public class Employee {
 
     public void setParkingPlace(ParkingPlace parkingPlace) {
         this.parkingPlace = parkingPlace;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     public void addPhoneNumber(PhoneNumber phoneNumber){

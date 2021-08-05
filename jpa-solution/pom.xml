@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>training360</groupId>
-    <artifactId>sv2021-jvjbf-reszvizsga</artifactId>
+    <artifactId>jpa-solution</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jpa</name>
     <description>jpa-solution</description>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.15</version>
+            <version>8.0.26</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
