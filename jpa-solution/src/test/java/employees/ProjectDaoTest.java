@@ -24,7 +24,7 @@ class ProjectDaoTest {
         employeeDao = new EmployeeDao(entityManagerFactory);
     }
 
-    @Test
+   /* @Test
     public void testSaveProject(){
         Employee john = new Employee("John Doe");
         Employee jane = new Employee("Jane Doe");
@@ -54,6 +54,19 @@ class ProjectDaoTest {
         assertEquals(Set.of("John Doe","Jane Doe"),
                 project.getEmployees().stream().map(Employee::getName).collect(Collectors.toSet()));
 
+    }*/
+
+    @Test
+    public void testSaveThenFind(){
+        Project project = new Project("Java");
+        project.getEmployees().put("java_1", new Employee("c123","John Doe"));
+        project.getEmployees().put("java_2", new Employee("c124","Jane Doe"));
+
+        projectDao.saveProject(project);
+        long id = project.getId();
+
+        Project another = projectDao.findById(id);
+        assertEquals("Jane Doe", another.getEmployees().get("java_2").getName());
     }
 
 }

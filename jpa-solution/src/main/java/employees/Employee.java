@@ -24,6 +24,9 @@ public class Employee {
 
     private LocalDate dateOfBirth;
 
+    @Column(name = "card_number")
+    private String cardNumber;
+
     @ElementCollection
     @CollectionTable(name = "nicknames", joinColumns = @JoinColumn(name = "emp_id"))
     @Column(name = "nickname")
@@ -62,6 +65,11 @@ public class Employee {
 
     public Employee(String name) {
         this.name = name;
+    }
+
+    public Employee( String cardNumber,String name) {
+        this.name = name;
+        this.cardNumber = cardNumber;
     }
 
     public Employee(String name, EmployeeType employeeType, LocalDate dateOfBirth) {
@@ -140,6 +148,14 @@ public class Employee {
 
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     public void addPhoneNumber(PhoneNumber phoneNumber){

@@ -26,6 +26,18 @@ public class ProjectDao {
         return project;
     }
 
+
+    public Project findById(long id){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Project project = entityManager.createQuery("select p from Project p join fetch p.employees where p.id = :id",
+                Project.class)
+                .setParameter("id",id)
+                .getSingleResult();
+        entityManager.close();
+        return project;
+    }
+
+
     public Project findProjectByName(String name){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Project project = entityManager.createQuery("select p from Project p join fetch p.employees where p.name = :name",
