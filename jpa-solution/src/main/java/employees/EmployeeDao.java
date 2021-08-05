@@ -3,6 +3,9 @@ package employees;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class EmployeeDao {
@@ -97,14 +100,14 @@ public class EmployeeDao {
         return employee;
     }
 
-    public Employee findEmployeeByName(String name) {
+   /* public Employee findEmployeeByName(String name) {
         EntityManager em = entityManagerFactory.createEntityManager();
         Employee employee = em.createQuery("select e from Employee e where e.name = :name", Employee.class)
                 .setParameter("name", name)
                 .getSingleResult();
         em.close();
         return employee;
-    }
+    }*/
 
     public Employee findEmployeeByIdWithPhoneNumbers(Long id) {
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -115,15 +118,56 @@ public class EmployeeDao {
         return employee;
     }
 
-    public void addPhoneNumber(long id,PhoneNumber phoneNumber) {
+    public void addPhoneNumber(long id, PhoneNumber phoneNumber) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         //Employee employee = em.find(Employee.class,id);
-        Employee employee = em.getReference(Employee.class,id);
+        Employee employee = em.getReference(Employee.class, id);
         phoneNumber.setEmployee(employee);
         em.persist(phoneNumber);
         em.getTransaction().commit();
         em.close();
     }
+
+    public Employee findEmployeeByName(String name) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> employees = criteriaQuery.from(Employee.class);
+        criteriaQuery.select(employees).where(criteriaBuilder.equal(employees.get("name"), name));
+        Employee employee = entityManager.createQuery(criteriaQuery).getSingleResult();
+        entityManager.close();
+        return employee;
+    }
+
+    public List<Employee> listEmployees(int start, int maxResult) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Employee> employees = entityManager
+                .createNamedQuery("listEmployees")
+                .setFirstResult(start)
+                .setMaxResults(maxResult)
+                .getResultList();
+        entityManager.close();
+        return employees;
+    }
+
+    public int findParkingPlaceNumberByEmployeeName(String name) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        int i = entityManager.createQuery("select p.number from Employee e join e.parkingPlace p where e.name = :name", Integer.class)
+                .setParameter("name", name)
+                .getSingleResult();
+        entityManager.close();
+        return i;
+    }
+
+    public List<Object[]> listEmployeesBaseData() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Object[]> empDatas = entityManager
+                .createQuery("select e.id, e.name from Employee e")
+                .getResultList();
+        entityManager.close();
+        return empDatas;
+    }
+
 
 }

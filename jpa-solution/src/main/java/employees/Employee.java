@@ -7,6 +7,7 @@ import java.util.*;
 @Entity
 @Table(name = "employees")
 @SecondaryTable(name = "emp_addresses", pkJoinColumns = @PrimaryKeyJoinColumn(name = "emp_id"))
+@NamedQuery(name = "listEmployees", query = "select e from Employee e order by e.name")
 public class Employee {
 
     public enum EmployeeType {FULL_TIME, HALF_TIME}
