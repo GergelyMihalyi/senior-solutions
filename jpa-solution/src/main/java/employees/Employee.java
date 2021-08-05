@@ -12,7 +12,8 @@ public class Employee {
     public enum EmployeeType {FULL_TIME, HALF_TIME}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     /*@GeneratedValue(generator = "Emp_Gen")
     @TableGenerator(name ="Emp_Gen", table = "emp_id_gen", pkColumnName = "gen_name",valueColumnName = "gen_val")*/
     private Long id;
@@ -45,7 +46,7 @@ public class Employee {
     @Column(name = "phone_number")
     private Map<String, String> phoneNumbers;*/
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, mappedBy = "employee")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "employee")
     //@OrderBy("type")
     @OrderColumn(name = "pos")
     private List<PhoneNumber> phoneNumbers;
@@ -55,10 +56,10 @@ public class Employee {
 
     @ManyToMany(mappedBy = "employees")
     private Set<Project> projects = new HashSet<>();
-/*
-    @Embedded
-    private Address address;
-*/
+    /*
+        @Embedded
+        private Address address;
+    */
     @Column(table = "emp_addresses")
     private String zip;
     @Column(table = "emp_addresses")
@@ -78,7 +79,7 @@ public class Employee {
         this.name = name;
     }
 
-    public Employee( String cardNumber,String name) {
+    public Employee(String cardNumber, String name) {
         this.name = name;
         this.cardNumber = cardNumber;
     }
@@ -201,11 +202,10 @@ public class Employee {
         this.line1 = line1;
     }
 
-    public void addPhoneNumber(PhoneNumber phoneNumber){
-        if(phoneNumbers == null){
+    public void addPhoneNumber(PhoneNumber phoneNumber) {
+        if (phoneNumbers == null) {
             phoneNumbers = new ArrayList<>();
         }
-        phoneNumbers.add(phoneNumber);
         phoneNumbers.add(phoneNumber);
         phoneNumber.setEmployee(this);
     }

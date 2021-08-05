@@ -79,7 +79,7 @@ class EmployeeDaoTest {
 
     @Test
     public void testEmployeeWithAttributes() {
-        Employee employee = new Employee("John Doe", Employee.EmployeeType.HALF_TIME, LocalDate.of(2000, 01, 01));
+        Employee employee = new Employee("John Doe", Employee.EmployeeType.HALF_TIME, LocalDate.of(2000, 1, 1));
         employeeDao.save(employee);
 
         System.out.println(employee.getDateOfBirth());
@@ -96,7 +96,7 @@ class EmployeeDaoTest {
         employee.setName("Jack Doe");
         Employee modifiedEmployee = employeeDao.findById(employee.getId());
         assertEquals("John Doe", modifiedEmployee.getName());
-        assertFalse(employee == modifiedEmployee);
+        assertNotSame(employee, modifiedEmployee);
     }
 
     @Test
@@ -136,12 +136,12 @@ class EmployeeDaoTest {
     public void testVacations() {
         Employee employee = new Employee("John Doe");
         employee.setVacationBookings(Set.of(
-                new VacationEntry(LocalDate.of(2020,1,1),4)
-                ,new VacationEntry(LocalDate.of(2020,2,10),4)));
+                new VacationEntry(LocalDate.of(2020, 1, 1), 4)
+                , new VacationEntry(LocalDate.of(2020, 2, 10), 4)));
         employeeDao.save(employee);
         Employee anotherEmployee = employeeDao.findEmployeeByIdWithVacations(employee.getId());
         System.out.println(anotherEmployee.getVacationBookings());
-        assertEquals(2,anotherEmployee.getVacationBookings().size());
+        assertEquals(2, anotherEmployee.getVacationBookings().size());
     }
 
     /*@Test
@@ -156,7 +156,7 @@ class EmployeeDaoTest {
     }*/
 
     @Test
-    public void testPhoneNumber(){
+    public void testPhoneNumber() {
         PhoneNumber phoneNumberHome = new PhoneNumber("home", "1234");
         PhoneNumber phoneNumberWork = new PhoneNumber("work", "4324");
         Employee employee = new Employee("John Doe");
@@ -164,20 +164,20 @@ class EmployeeDaoTest {
         employee.addPhoneNumber(phoneNumberWork);
         employeeDao.save(employee);
         Employee anotherEmployee = employeeDao.findEmployeeByIdWithPhoneNumbers(employee.getId());
-        assertEquals(2,anotherEmployee.getPhoneNumbers().size());
+        assertEquals(2, anotherEmployee.getPhoneNumbers().size());
     }
 
     @Test
-    public void testAddPhoneNumber(){
+    public void testAddPhoneNumber() {
         Employee employee = new Employee("John Doe");
         employeeDao.save(employee);
         employeeDao.addPhoneNumber(employee.getId(), new PhoneNumber("home", "1234"));
         Employee anotherEmployee = employeeDao.findEmployeeByIdWithPhoneNumbers(employee.getId());
-        assertEquals(1,anotherEmployee.getPhoneNumbers().size());
+        assertEquals(1, anotherEmployee.getPhoneNumbers().size());
     }
 
     @Test
-    public void testRemove(){
+    public void testRemove() {
         Employee employee = new Employee("John Doe");
 
         employee.addPhoneNumber(new PhoneNumber("home", "1234"));
@@ -185,25 +185,45 @@ class EmployeeDaoTest {
         employeeDao.save(employee);
         employeeDao.delete(employee.getId());
     }
-/*
+
+    /*
+        @Test
+        public void testEmployeeWithAddress(){
+            Employee employee = new Employee("John Doe");
+            Address address = new Address("H-3213","Budapest","Teszt utca");
+            employee.setAddress(address);
+            employeeDao.save(employee);
+            Employee anotherEmployee = employeeDao.findById(employee.getId());
+            assertEquals("H-3213", anotherEmployee.getAddress().getZip());
+        }
+        */
     @Test
-    public void testEmployeeWithAddress(){
-        Employee employee = new Employee("John Doe");
-        Address address = new Address("H-3213","Budapest","Teszt utca");
-        employee.setAddress(address);
-        employeeDao.save(employee);
-        Employee anotherEmployee = employeeDao.findById(employee.getId());
-        assertEquals("H-3213", anotherEmployee.getAddress().getZip());
-    }
-    */
-    @Test
-    public void testEmployeeWithAddressAttributes(){
+    public void testEmployeeWithAddressAttributes() {
         Employee employee = new Employee("John Doe");
         employee.setZip("H-3213");
         employee.setCity("Budapest");
         employee.setLine1("Teszt utca");
         employeeDao.save(employee);
         Employee anotherEmployee = employeeDao.findById(employee.getId());
-        assertEquals("H-3213",anotherEmployee.getZip());
+        assertEquals("H-3213", anotherEmployee.getZip());
+    }
+
+
+    @Test
+    public void testSaveAndFind() {
+        employeeDao.save(new Employee("John Doe"));
+        employeeDao.save(new CompanyEmployee("Jane Doe", 100_000));
+        employeeDao.save(new ContractEmployee("Jack Doe", 22));
+
+        Employee employee = employeeDao.findEmployeeByName("John Doe");
+        assertEquals("John Doe", employee.getName());
+
+        Employee company = employeeDao.findEmployeeByName("Jane Doe");
+        assertEquals("Jane Doe", company.getName());
+
+        Employee contract = employeeDao.findEmployeeByName("Jack Doe");
+        assertEquals("Jack Doe", contract.getName());
+
+
     }
 }

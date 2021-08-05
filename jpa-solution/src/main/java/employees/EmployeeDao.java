@@ -97,6 +97,15 @@ public class EmployeeDao {
         return employee;
     }
 
+    public Employee findEmployeeByName(String name) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        Employee employee = em.createQuery("select e from Employee e where e.name = :name", Employee.class)
+                .setParameter("name", name)
+                .getSingleResult();
+        em.close();
+        return employee;
+    }
+
     public Employee findEmployeeByIdWithPhoneNumbers(Long id) {
         EntityManager em = entityManagerFactory.createEntityManager();
         Employee employee = em.createQuery("select e from Employee e join fetch e.phoneNumbers where e.id = :id", Employee.class)
