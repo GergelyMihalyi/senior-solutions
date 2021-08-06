@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,36 +15,39 @@ public class EmployeesService {
     private ModelMapper modelMapper;
 
 
-    private EmployeesDao employeeDao;
+    private EmployeesRepository repository;
 
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
-       return employeeDao.findAll().stream()
+       return repository.findAll().stream()
                .map(e->modelMapper.map(e, EmployeeDto.class))
                .collect(Collectors.toList());
     }
 
     public EmployeeDto findEmployeeById(long id) {
-        return modelMapper.map(employeeDao.findById(id),EmployeeDto.class);
+        return modelMapper.map(repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("employee not found")),
+                EmployeeDto.class);
     }
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
         Employee employee = new Employee( command.getName());
-        employeeDao.createEmployee(employee);
+        repository.save(employee);
         return modelMapper.map(employee, EmployeeDto.class);
     }
 
+    @Transactional
     public EmployeeDto updateEmployee(long id, UpdateEmployeeCommand command) {
-        Employee employee = new Employee(id, command.getName());
-        employeeDao.updateEmployee(employee);
+        Employee employee = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("employee not found"));
+        employee.setName(command.getName());
         return modelMapper.map(employee, EmployeeDto.class);
     }
 
     public void deleteEmployee(long id) {
-        employeeDao.deleteById(id);
+        repository.deleteById(id);
     }
 
     public void deleteAllEmployees(){
-        employeeDao.deleteAll();
+        repository.deleteAll();
     }
 }
